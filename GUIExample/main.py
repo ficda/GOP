@@ -2,6 +2,22 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtMultimedia import *
 import os
+import threading
+
+exitFlag=0
+
+class myThread (threading.Thread):
+    def __init__(self, threadID):
+        threading.Thread.__init__(self)
+        self.threadID = str(threadID)
+
+
+    def run(self):
+        print("Starting")
+
+        os.system("python3 callThis.py")
+        print("Exiting")
+        exitFlag=1
 
 
 
@@ -29,16 +45,11 @@ class Form(QWidget):
 
     def submitContact(self):
         name = self.nameLine.text()
-
-        if name == "":
-            QMessageBox.information(self, "Empty Field",
-                                    "Please enter a name and address.")
-            return
-        else:
-            QMessageBox.information(self, "Success!",
-                                    "Hello %s!" % name)
-            os.system("python3 callThis.py")
-            print('OK')
+        newTask = myThread(1)
+        newTask.start()
+        print('Thread started')
+        QMessageBox.information(self, "Success!",
+            "Hello %s!" % name)
 
 if __name__ == '__main__':
     import sys
